@@ -7,7 +7,7 @@ BACKGROUND_COLOR = "#B1DDC6"
 random_dict = {}
 
 try:
-    data = pandas.read_csv("words_to_learn.csv")
+    data = pandas.read_csv("data/words_to_learn.csv")
     dict_ = data.to_dict(orient="records")
 
 except FileNotFoundError:
