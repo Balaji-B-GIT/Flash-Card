@@ -1,11 +1,19 @@
-from operator import indexOf
 from tkinter import *
 import pandas
 import random
+
+
 BACKGROUND_COLOR = "#B1DDC6"
 random_dict = {}
-data = pandas.read_csv("data/french_words.csv")
-dict_ = data.to_dict(orient="records")
+
+try:
+    data = pandas.read_csv("words_to_learn.csv")
+    dict_ = data.to_dict(orient="records")
+
+except FileNotFoundError:
+    data = pandas.read_csv("data/french_words.csv")
+    dict_ = data.to_dict(orient="records")
+
 
 def front_card():
     global random_dict, timer
@@ -22,6 +30,14 @@ def back_card():
     canvas.itemconfig(canvas_image,image=back_img)
     canvas.itemconfig(title, text="English",fill = "white")
     canvas.itemconfig(word, text=eng_word,fill = "white")
+
+def known():
+    word_to_remove = random_dict
+    dict_.remove(word_to_remove)
+    df = pandas.DataFrame(dict_)
+    df.to_csv("words_to_learn.csv",index=False)
+    front_card()
+
 
 window = Tk()
 window.title("Flashy")
@@ -43,7 +59,7 @@ word = canvas.create_text(400,263,text="",font=("Ariel",60,"bold"))
 
 canvas.grid(row = 0,column = 0,columnspan = 2,sticky=EW)
 
-known_button = Button(image=right_img, highlightthickness=0, command=front_card)
+known_button = Button(image=right_img, highlightthickness=0, command=known)
 known_button.grid(row=1,column=0)
 
 unknown_button = Button(image=wrong_img, highlightthickness=0, command=front_card)
